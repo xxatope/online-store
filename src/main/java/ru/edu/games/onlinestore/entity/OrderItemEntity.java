@@ -1,5 +1,6 @@
 package ru.edu.games.onlinestore.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -14,6 +15,7 @@ public class OrderItemEntity {
     private String productName;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "order_id")
     private OrderEntity order;
 

@@ -8,7 +8,7 @@ import ru.edu.games.onlinestore.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 

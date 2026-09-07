@@ -1,0 +1,17 @@
+### Создать категорию
+POST http://localhost:8080/api/categories
+Content-Type: application/json
+
+{
+  "name": "Обувь"
+}
+
+### Создать пользователя
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "123456",
+  "role": "USER"
+}

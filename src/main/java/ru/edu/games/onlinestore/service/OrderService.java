@@ -44,4 +44,9 @@ public class OrderService {
         return order;
     }
 
+    public OrderEntity getOrderById(Long id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Заказ не найден"));
+    }
+
 }
