@@ -1,17 +1,60 @@
-### Создать категорию
+### 1. Регистрация нового покупателя (роль USER по умолчанию)
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "customer@test.com",
+  "password": "password123"
+}
+
+### 2. Вход (логин) покупателя и получение JWT-токена
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@test.com",
+  "password": "password123"
+}
+
+> {% client.global.set("user_token", response.body.token); %}
+
+### 3. Просмотр каталога товаров (доступно всем БЕЗ токена)
+GET http://localhost:8080/api/products
+
+### 4. Просмотр категорий (доступно всем БЕЗ токена)
+GET http://localhost:8080/api/categories
+
+### 5. Попытка создать категорию покупателем (должен вернуть 403 Forbidden)
 POST http://localhost:8080/api/categories
+Authorization: Bearer {{user_token}}
 Content-Type: application/json
 
 {
-  "name": "Обувь"
+  "name": "Электроника"
 }
 
-### Создать пользователя
-POST http://localhost:8080/api/users
+### 6. Создание заказа покупателем (токен подставляется автоматически)
+POST http://localhost:8080/api/orders
+Authorization: Bearer {{user_token}}
 Content-Type: application/json
 
 {
-  "email": "test@test.com",
-  "password": "123456",
-  "role": "USER"
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    }
+  ]
 }
+
+### 7. Просмотр своих заказов (только заказы текущего пользователя)
+GET http://localhost:8080/api/orders/my
+Authorization: Bearer {{user_token}}
+
+### 8. Просмотр заказа по ID
+GET http://localhost:8080/api/orders/1
+Authorization: Bearer {{user_token}}
+
+### 9. Попытка посмотреть список всех пользователей обычным покупателем (403 Forbidden)
+GET http://localhost:8080/api/users
+Authorization: Bearer {{user_token}}
