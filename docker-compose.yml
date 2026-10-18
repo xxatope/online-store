@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-
+  # 1. База данных PostgreSQL
   postgres:
     image: postgres:16-alpine
     container_name: online_store_postgres
@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-
+  # 2. Apache Kafka (KRaft режим)
   kafka:
     image: apache/kafka:3.7.0
     container_name: online_store_kafka
@@ -35,7 +35,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
 
-
+  # 3. Веб-интерфейс для Kafka
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
     container_name: online_store_kafka_ui
@@ -45,6 +45,26 @@ services:
       KAFKA_CLUSTERS_0_NAME: local-cluster
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
     depends_on:
+      - kafka
+
+  # 4. Наше Spring Boot приложение (НОВЫЙ СЕРВИС)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: online_store_app
+    restart: on-failure
+    ports:
+      - "8080:8080"
+    environment:
+      # Переопределяем подключение к БД на контейнер postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/online_store
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: "1111"
+      # Переопределяем подключение к Кафке на контейнер kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - postgres
       - kafka
 
 volumes:
