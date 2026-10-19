@@ -16,6 +16,11 @@ public class ProductEntity {
 
     private String description;
 
+    @Version
+    private Long version;
+
+    private Integer stock;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
@@ -28,8 +33,14 @@ public class ProductEntity {
         return name;
     }
 
+    public Integer getStock(){return stock;}
+
     public Long getId() {
         return id;
+    }
+
+    public Long getVersion() {
+        return version;
     }
 
     public String getDescription() {
@@ -50,6 +61,10 @@ public class ProductEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public void setDescription(String description) {

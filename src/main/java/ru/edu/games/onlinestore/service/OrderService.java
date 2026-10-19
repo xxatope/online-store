@@ -49,6 +49,9 @@ public class OrderService {
             ProductEntity product = productRepository.findById(itemDto.getProductId())
                     .orElseThrow(()-> new RuntimeException("Товар не найден!") );
 
+            if(product.getStock()== null || product.getStock() - itemDto.getQuantity() < 0) throw new RuntimeException("Нет в наличии");
+
+            product.setStock(product.getStock() - itemDto.getQuantity());
 
             OrderItemEntity item = new OrderItemEntity();
             item.setOrder(order);
